@@ -2,6 +2,7 @@ import os
 import requests
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
+import json
 
 def download_ncbi_images(article_id, save_dir):
     url = f'https://www.ncbi.nlm.nih.gov/pmc/articles/{article_id}/'
@@ -52,10 +53,9 @@ def download_ncbi_images(article_id, save_dir):
         else:
             print('No image found in figure.')
     
-    captions_file_path = os.path.join(save_dir, 'captions.txt')
+    captions_file_path = os.path.join(save_dir, 'captions.json')
     with open(captions_file_path, 'w', encoding='utf-8') as caption_file:
-        for img_name, caption in captions_dict.items():
-            caption_file.write(f'{img_name}: {caption}\n')
+        json.dump(captions_dict, caption_file, ensure_ascii=False, indent=4)
     
     print(f'Captions saved to {captions_file_path}')
     return captions_dict
